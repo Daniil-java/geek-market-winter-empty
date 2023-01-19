@@ -48,5 +48,15 @@ public class FileStoreService implements IFileStoreService {
         return fileMetaProvider.getMetaFiles(subtype);
     }
 
+    @Override
+    public void deleteFile(byte[] bytes, String originalFilename, int subType) throws IOException, NoSuchAlgorithmException {
+        final UUID md5 = HashHelper.getMd5Hash(bytes);
+
+        String filename = fileMetaProvider.checkFileExists(md5);
+        if (filename == null) {
+            fileMetaProvider.deleteFileMeta(md5, originalFilename, subType);
+        }
+    }
+
 
 }
