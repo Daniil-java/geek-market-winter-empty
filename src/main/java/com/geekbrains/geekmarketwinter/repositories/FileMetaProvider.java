@@ -22,6 +22,8 @@ public class FileMetaProvider implements IFileMetaProvider {
     private static final String SAVE_FILE_META_DATA = "insert into vma.file_info_metadata (hash, filename, sub_type)\n" +
             "values (:hash, :finame, :subtype)";
 
+    private static final String DELETE_FILE_META_DATA = "delete from vma.file_info_metadata where hash = :hash and sub_type = :subtype and filename = :filename";
+
     private final Sql2o sql2o;
 
     public FileMetaProvider(@Autowired Sql2o sql2o) {
@@ -55,6 +57,17 @@ public class FileMetaProvider implements IFileMetaProvider {
             return connection.createQuery(GET_FILES_META, false)
                     .addParameter("subtype", subtype)
                     .executeAndFetch(FileMetaDTO.class);
+        }
+    }
+
+    @Override
+    public void deleteFileMeta(UUID md5, String originalFilename, int subType) {
+        try (Connection connection = sql2o.open()) {
+            connection.createQuery(DELETE_FILE_META_DATA, false)
+                    .addParameter("hash", md5)
+                    .addParameter("subtype", subType)
+                    .addParameter("filename", originalFilename)
+                    .executeUpdate();
         }
     }
 }

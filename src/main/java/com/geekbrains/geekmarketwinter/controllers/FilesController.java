@@ -46,4 +46,16 @@ public class FilesController {
     public ResponseEntity<?> downloadFile(@RequestParam("subtype") int subtype) throws IOException {
         return ResponseEntity.ok(fileStoreService.getMetaFiles(subtype));
     }
+
+    @DeleteMapping("/deletefile")
+    public ResponseEntity<String> deleteFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("subtype") int subType
+    ) throws IOException, NoSuchAlgorithmException, InterruptedException {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File is empty");
+        }
+        fileStoreService.deleteFile(file.getBytes(), file.getOriginalFilename(), subType);
+        return ResponseEntity.ok(file.getOriginalFilename());
+    }
 }

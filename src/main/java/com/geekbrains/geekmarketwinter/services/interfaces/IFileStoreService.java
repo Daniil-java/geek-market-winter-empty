@@ -26,4 +26,5 @@ public interface IFileStoreService {
     Collection<FileMetaDTO> getMetaFiles(int subtype);
 
 
+    void deleteFile(byte[] bytes, String originalFilename, int subType) throws IOException, NoSuchAlgorithmException;;
 }
